@@ -40,7 +40,10 @@ Hint: There is an easy way. -/
 @[autograded 1] theorem about_Impl_term :
   ∀a b : Prop, ¬ a ∨ b → a → b :=
   sorry
+<<<<<<< HEAD
   
+=======
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 /- 1.2 (2 points). Prove the same theorem again, this time by providing a
 structured proof, with `fix`, `assume`, and `show`. -/

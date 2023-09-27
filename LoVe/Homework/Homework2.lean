@@ -33,6 +33,7 @@ Think about the similarity to the type inhabitation problems of HW1!
 
 @[autograded 1] theorem B (a b c : Prop) :
   (a → b) → (c → a) → c → b :=
+<<<<<<< HEAD
   by
     intro ha hb hc
     apply ha (hb hc)
@@ -51,6 +52,17 @@ Think about the similarity to the type inhabitation problems of HW1!
     intro hf hc hb
     apply hf hc (fun x : a => hb)
     done
+=======
+  sorry
+
+@[autograded 1] theorem S (a b c : Prop) :
+  (a → b → c) → (a → b) → a → c :=
+  sorry
+
+@[autograded 1] theorem more_nonsense (a b c : Prop) :
+  (c → (a → b) → a) → c → b → a :=
+  sorry
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 
 /- For an extra challenge: translate the `weak_peirce` type inhabitation 
@@ -73,6 +85,7 @@ Hints:
 
 @[autograded 1] theorem about_Impl (a b : Prop) :
   ¬ a ∨ b → a → b :=
+<<<<<<< HEAD
   by
     rw[Not]
     intro ha
@@ -86,6 +99,9 @@ Hints:
     apply hc
     done
 
+=======
+  sorry
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 /- 2.2 (2 points). 
 
@@ -134,6 +150,7 @@ Hints:
 
 @[autograded 2] theorem EM_of_DN :
   DoubleNegation → ExcludedMiddle :=
+<<<<<<< HEAD
   by
     rw[DoubleNegation]
     intro ha hb
@@ -147,6 +164,10 @@ Hints:
     apply Or.inl
     exact hd
     done
+=======
+  sorry
+
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 /-
 
@@ -171,6 +192,7 @@ three missing implications, exploiting the three theorems we already have. -/
 
 
 -- enter your solution here
+<<<<<<< HEAD
 theorem DN_of_EM :
 ExcludedMiddle → DoubleNegation :=
 by
@@ -200,6 +222,10 @@ by
   assumption
   done
 
+=======
+
+
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 /-! ## Question 3 (3 points): Equality
 
 You may hear it said that equality is the smallest *reflexive*, *symmetric*, 
@@ -227,6 +253,7 @@ using `Eq.symm`, `Eq.trans`, or `Eq.subst`. You should not use any tactics
 besides `apply`, `exact`, and `rfl`. -/
 
 @[autograded 1] theorem my_symm (h : b = a) : a = b :=
+<<<<<<< HEAD
   by 
     apply symmtrans
     {
@@ -246,6 +273,12 @@ besides `apply`, `exact`, and `rfl`. -/
     {
       exact my_symm h2
     }
+=======
+  sorry
+
+@[autograded 2] theorem my_trans (h1 : a = b) (h2 : b = c) : a = c :=
+  sorry
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 end
 
@@ -287,6 +320,7 @@ definition, you can use `rw`.) -/
 
 @[autograded 3] theorem pythagorean_triple_not_all_squares (a b c : ℕ) :
   IsPythagoreanTriple a b c → ¬(IsSquare a ∧ IsSquare b ∧ IsSquare c) :=
+<<<<<<< HEAD
   by
     intro h_init h3and
     apply h3and.elim
@@ -324,6 +358,9 @@ definition, you can use `rw`.) -/
       exact n2
     }
     done
+=======
+  sorry
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 
 end BackwardProofs

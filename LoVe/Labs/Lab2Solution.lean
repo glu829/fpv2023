@@ -23,91 +23,55 @@ Section 3.3 in the Hitchhiker's Guide. -/
 
 theorem I (a : Prop) :
   a → a :=
-<<<<<<< HEAD
   by
     intro ha
-    apply ha
-    done
+    exact ha
 
 theorem K (a b : Prop) :
   a → b → b :=
   by
-    intro ha
-    intro hb
-    apply hb
-    done
+    intro ha hb
+    exact hb
 
 theorem C (a b c : Prop) :
   (a → b → c) → b → a → c :=
   by
-    intro hf
-    intro hb ha
-    apply hf ha hb
-    done
+    intro hg hb ha
+    apply hg
+    exact ha
+    exact hb
 
 theorem proj_fst (a : Prop) :
   a → a → a :=
   by
-    intro ha
-    intro hb
-    apply ha
-    done
-=======
-  sorry
-
-theorem K (a b : Prop) :
-  a → b → b :=
-  sorry
-
-theorem C (a b c : Prop) :
-  (a → b → c) → b → a → c :=
-  sorry
-
-theorem proj_fst (a : Prop) :
-  a → a → a :=
-  sorry
->>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
+    intro ha ha'
+    exact ha
 
 /- Please give a different answer than for `proj_fst`: -/
 
 theorem proj_snd (a : Prop) :
   a → a → a :=
-<<<<<<< HEAD
-  by 
-    intro ha
-    intro hb
-    assumption
-    done
+  by
+    intro ha ha'
+    exact ha'
 
 theorem some_nonsense (a b c : Prop) :
   (a → b → c) → a → (a → c) → b → c :=
   by
-    intro hf ha hg hb
-    apply hg ha
-    done
-=======
-  sorry
-
-theorem some_nonsense (a b c : Prop) :
-  (a → b → c) → a → (a → c) → b → c :=
-  sorry
->>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
+    intro hg ha hf hb
+    apply hg
+    exact ha
+    exact hb
 
 /- 1.2. Prove the contraposition rule using basic tactics. -/
 
 theorem contrapositive (a b : Prop) :
   (a → b) → ¬ b → ¬ a :=
-<<<<<<< HEAD
   by
-    intro hf hb
-    rw[Not]
-    rw[Not] at hb
-    intro ha
-    apply hb (hf ha)
-    done
-=======
-  sorry
->>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
+    intro hab hnb ha
+    apply hnb
+    apply hab
+    apply ha
 
 /- 1.3. Prove the distributivity of `∀` over `∧` using basic tactics.
 
@@ -117,41 +81,20 @@ be necessary. -/
 
 theorem forall_and {α : Type} (p q : α → Prop) :
   (∀x, p x ∧ q x) ↔ (∀x, p x) ∧ (∀x, q x) :=
-<<<<<<< HEAD
   by
     apply Iff.intro
-    {
-      intro hand
+    { intro h
       apply And.intro
-      {
-        intro a
+      { intro x
         apply And.left
-        apply (hand a)
-      }
-      {
-        intro a
+        apply h }
+      { intro x
         apply And.right
-        apply (hand a)
-      }
-    }
-    {
-      intro hand ha
-      /- apply hand.elim
-      intro px 
-      intro qx -/
-
+        apply h } }
+    { intro h x
       apply And.intro
-      {
-        apply hand.left ha
-      }
-      {
-        apply hand.right ha
-      }
-    }
-    done
-=======
-  sorry
->>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
+      { apply And.left h }
+      { apply And.right h } }
 
 
 /- ## Question 2: Natural Numbers
@@ -163,38 +106,37 @@ theorem forall_and {α : Type} (p q : α → Prop) :
 
 theorem mul_zero (n : ℕ) :
   mul 0 n = 0 :=
-<<<<<<< HEAD
   by
     induction n with
-      | zero => rfl
-      | succ n' ih => rw[mul, ih]; rfl
-    done
-=======
-  sorry
->>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
+    | zero       => rfl
+    | succ n' ih => simp only [mul, ih]
 
 #check add_succ
 theorem mul_succ (m n : ℕ) :
   mul (Nat.succ m) n = add (mul m n) n :=
-<<<<<<< HEAD
   by
     induction n with
-      | zero => rfl
-      | succ n' ih => rw[mul, add_succ, add_comm _ (Nat.succ n'), mul, add_succ, ih, ← add_assoc, add_comm]
-=======
-  sorry
->>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
+    | zero       => rfl
+    | succ n' ih => simp only [add, add_succ, add_assoc, mul, ih]
 
 /- 2.2. Prove commutativity and associativity of multiplication using the
 `induction` tactic. Choose the induction variable carefully. -/
 
 theorem mul_comm (m n : ℕ) :
   mul m n = mul n m :=
-  sorry
+  by
+    induction m with
+    | zero       => simp only [mul, mul_zero]
+    | succ m' ih =>
+      simp only [mul_succ, ih]
+      ac_rfl
 
 theorem mul_assoc (l m n : ℕ) :
   mul (mul l m) n = mul l (mul m n) :=
-  sorry
+  by
+    induction n with
+    | zero       => rfl
+    | succ n' ih => simp only [mul, mul_add, ih]
 
 /- 2.3. Prove the symmetric variant of `mul_add` using `rw`. To apply
 commutativity at a specific position, instantiate the rule by passing some
@@ -202,7 +144,9 @@ arguments (e.g., `mul_comm _ l`). -/
 
 theorem add_mul (l m n : ℕ) :
   mul (add l m) n = add (mul n l) (mul n m) :=
-  sorry
+  by
+    rw [mul_comm _ n]
+    rw [mul_add]
 
 
 /- ## Question 3 (**optional**): Intuitionistic Logic
@@ -237,13 +181,34 @@ and similarly for `Peirce`. -/
 
 theorem Peirce_of_EM :
   ExcludedMiddle → Peirce :=
-  sorry
+  by
+    rw [ExcludedMiddle]
+    rw [Peirce]
+    intro hem
+    intro a b haba
+    apply Or.elim (hem a)
+    { intro ha
+      assumption }
+    { intro hna
+      apply haba
+      intro ha
+      apply False.elim
+      apply hna
+      assumption }
 
 /- 3.2 (**optional**). Prove the following implication using tactics. -/
 
 theorem DN_of_Peirce :
   Peirce → DoubleNegation :=
-  sorry
+  by
+    rw [Peirce]
+    rw [DoubleNegation]
+    intro hpeirce a hnna
+    apply hpeirce a False
+    intro hna
+    apply False.elim
+    apply hnna
+    exact hna
 
 /- We leave the remaining implication for the homework: -/
 

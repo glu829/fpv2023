@@ -31,6 +31,7 @@ The keyword `by` indicates to Lean the proof is tactical. -/
 theorem fst_of_two_props :
   ∀a b : Prop, a → b → a :=
   by
+<<<<<<< HEAD
     intro a2 /- Introduces a2 as some proposition, which peels off a layer of the for all statement-/
     intro b2 /- Introduces b2 as another proposition. Now we just need to prove a2 → b2 → a2 -/
     /- intro x  Introduces x (where x is of type a2)-/
@@ -40,6 +41,11 @@ theorem fst_of_two_props :
     intro hb
     apply ha
     done
+=======
+    intro a b
+    intro ha hb
+    apply ha
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 
 /- Note that `a → b → a` is parsed as `a → (b → a)`.
@@ -65,19 +71,30 @@ lambda and application expressions?
 
 theorem fst_of_two_props_params (a b : Prop) (ha : a) (hb : b) :
   a :=
+<<<<<<< HEAD
   by 
     apply ha
     done
+=======
+  by apply ha
+
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 
 theorem prop_comp (a b c : Prop) (hab : a → b) (hbc : b → c) :
   a → c :=
   by
     intro ha
+<<<<<<< HEAD
     apply hbc (hab ha)
     -- apply hba
     -- apply ha
     done
+=======
+    apply hbc
+    apply hab
+    apply ha
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 
 /- The above proof step by step:
@@ -108,8 +125,11 @@ theorem fst_of_two_props_assumption (a b : Prop)
 
 Introduction rules: -/
 
+<<<<<<< HEAD
 -- ∀ x : ℕ, P x ∧ Q x
 
+=======
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 #check True.intro
 #check And.intro
 #check Or.inl
@@ -142,6 +162,7 @@ theorem And_swap (a b : Prop) :
   by
     intro hab
     apply And.intro
+<<<<<<< HEAD
     apply And.right 
     exact hab
     apply And.left 
@@ -172,6 +193,13 @@ theorem And_swap3 (a b : Prop) :
     assumption
     assumption
     done
+=======
+    apply And.right
+    exact hab
+    apply And.left
+    exact hab
+
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 /- The above proof step by step:
 
@@ -195,6 +223,7 @@ theorem And_swap_braces :
     { exact And.right hab }
     { exact And.left hab }
 
+<<<<<<< HEAD
 theorem And_swap_braces2 :
   ∀a b : Prop, a ∧ b → b ∧ a :=
   by
@@ -204,6 +233,8 @@ theorem And_swap_braces2 :
       assumption }
     { exact And.left hab }
 
+=======
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 /- Notice above how we pass the hypothesis `hab` directly to the theorems
 `And.right` and `And.left`, instead of waiting for the theorems' assumptions to
@@ -222,6 +253,7 @@ theorem Or_swap (a b : Prop) :
   a ∨ b → b ∨ a :=
   by
     intro hab
+<<<<<<< HEAD
     -- apply Or.inl (wrong proof step, even though we want to work on the goal we shouldn't break symmetry)
     apply Or.elim hab
     { intro ha
@@ -236,6 +268,13 @@ theorem Or_swap (a b : Prop) :
   -- apply Or.inr
   -- apply Or.inr
   -- done
+=======
+    apply Or.elim hab
+    { intro ha
+      exact Or.inr ha }
+    { intro hb
+      exact Or.inl hb }
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 theorem modus_ponens (a b : Prop) :
   (a → b) → a → b :=
@@ -247,6 +286,7 @@ theorem modus_ponens (a b : Prop) :
 theorem Not_Not_intro (a : Prop) :
   a → ¬¬ a :=
   by
+<<<<<<< HEAD
     intro ha
     -- rw[Not] this means rewrite Not (which unfolds one layer)
     -- rw[Not]
@@ -264,6 +304,12 @@ theorem Not_Not_intro2 (a : Prop) :
     rw[Not]
     intro hna
     contradiction -- this proves whatever you want if context contains a contradiction
+=======
+    intro ha hna
+    apply hna
+    exact ha
+
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 
 def double (n : ℕ) : ℕ :=
@@ -274,6 +320,7 @@ theorem Exists_double_iden :
   ∃n : ℕ, double n = n :=
   by
     apply Exists.intro 0
+<<<<<<< HEAD
     rfl -- tells lean to do some computation, must be last step like exact
     -- rw[double]
     done
@@ -293,10 +340,15 @@ theorem rephrasing_impl (p q : Prop) :
 (p → q) → (¬ p ∨ q) :=
 by
   sorry
+=======
+    rfl
+
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 
 /- ## Reasoning about Equality
 
+<<<<<<< HEAD
 0 = 0
 double 2 = 2 + 2
 
@@ -311,6 +363,8 @@ f 1 = 0
 
 
 
+=======
+>>>>>>> ec4b3f9b278ea4a4967bd220fc2a2c5a43083d9e
 
 *Syntactic* equality:
   x = x
