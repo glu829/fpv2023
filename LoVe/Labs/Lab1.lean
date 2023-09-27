@@ -21,24 +21,24 @@ while constructing a term. By hovering over `_`, you will see the current
 logical context. -/
 
 def I : α → α :=
-  sorry
+  fun a => a
 
 def K : α → β → α :=
-  sorry
+  fun a => fun b => a
 
 def C : (α → β → γ) → β → α → γ :=
-  sorry
+  fun f => fun b => fun a => f a b
 
 def projFst : α → α → α :=
-  sorry
+  fun a => fun a' => a
 
 /- Give a different answer than for `projFst`. -/
 
 def projSnd : α → α → α :=
-  sorry
+  fun a a' => a
 
 def someNonsense : (α → β → γ) → α → (α → γ) → β → γ :=
-  sorry
+  fun f a g b => g a
 
 
 /- ## Question 2: Typing Derivation
@@ -87,6 +87,14 @@ def simplify : AExp → AExp
   | AExp.add (AExp.num 0) e₂ => simplify e₂
   | AExp.add e₁ (AExp.num 0) => simplify e₁
   -- insert the missing cases here
+  | AExp.sub e₁ (AExp.num 0) => simplify e₁
+
+  | AExp.mul e₁ (AExp.num 1) => simplify e₁
+  | AExp.mul (AExp.num 1) e₂ => simplify e₂
+
+  | AExp.div e₁ (AExp.num 1) => simplify e₁
+  | AExp.div e₁ (AExp.num 0) => simplify (AExp.num 0)
+
   -- catch-all cases below
   | AExp.num i               => AExp.num i
   | AExp.var x               => AExp.var x
@@ -105,7 +113,7 @@ the property that the value of `e` after simplification is the same as the
 value of `e` before. -/
 
 theorem simplify_correct (env : String → ℤ) (e : AExp) :
-  True :=   -- replace `True` with your theorem statement
+  eval env e = eval env (simplify e) :=   -- replace `True` with your theorem statement
   sorry     -- leave `sorry` alone
 
 /-! ## Question 4: Lists and Options
@@ -138,7 +146,9 @@ the output. Here's an example:
 `omap (λ x => x + 1) [some 0, none, some 2] = [some 1, none, some 3]` -/
 
 def omap {α β : Type} (f : α → β) : List (Option α) → List (Option β)
-  := sorry
+  | [] => []
+  | none :: t => none :: omap f t
+  | (some h) :: t => some (f h) :: omap f t
 
 /-! 4.2. State as Lean theorems (without proving them) the so-called functorial
 properties of `omap`, which are stated informally below:
@@ -152,3 +162,10 @@ Try to give meaningful names to your theorems, and make sure to state them
 as generally as possible. You can enter `sorry` in lieu of a proof. -/
 
 -- Write your theorem statements here
+theorem omap_identity (lst : List (Option α)):
+  omap ( fun a => a) lst = lst
+:= sorry
+
+theorem omap_comp (f : α → β) (g : β → γ) (lst : List (Option α)):
+  omap (g∘f) lst  = omap (g) (omap (f) lst)
+:= sorry

@@ -42,16 +42,16 @@ constructing a term. By hovering over `_`, you will see the current logical
 context. -/
 
 @[autograded 1] def B : (α → β) → (γ → α) → γ → β :=
-  sorry
+  fun a => fun b => fun c => a (b c)
 
 @[autograded 1] def S : (α → β → γ) → (α → β) → α → γ :=
-  sorry
+  fun f => fun g => fun a => f a (g a)
 
 @[autograded 1] def moreNonsense : (γ → (α → β) → α) → γ → β → α :=
-  sorry
+  fun f  => fun c => fun b => f c (fun a => b)
 
 @[autograded 1] def evenMoreNonsense : (α → α → β) → (β → γ) → α → β → γ :=
-  sorry
+  fun f => fun g => fun a => fun b => g b
 
 /- 1.2 (2 points). Complete the following definition.
 
@@ -61,7 +61,7 @@ follow the procedure described in the Hitchhiker's Guide.
 Note: Peirce is pronounced like the English word "purse." -/
 
 @[autograded 2] def weakPeirce : ((((α → β) → α) → α) → β) → β :=
-  sorry
+  fun f => f (fun g => g (fun h => f (fun f' => h)))
 
 
 
@@ -75,6 +75,27 @@ useful.
 Feel free to introduce abbreviations to avoid repeating large contexts `C`. -/
 
 -- Write your solution here
+
+/-
+
+Let C = f : (α → β → γ), g : (α → β), a : α
+
+––––––––––––––––– VAR ––––––––– VAR         –––––––––––––– VAR –––––––– VAR
+C ⊢ f : α → β → γ    C ⊢ a : α              C ⊢ g : α → β     C ⊢ a : α     
+––––––––––––––––––––––––––––––– APP         ––––––––––––––––––––––––––– APP
+C ⊢ f a : β → γ                             C ⊢ g a : β
+–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––– APP
+f : (α → β → γ), g : (α → β), a : α ⊢ f a (g a) → γ 
+–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––– FUN
+f : (α → β → γ), g : (α → β) ⊢ fun a → f a (g a) : α → β 
+–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––– FUN
+f : (α → β → γ) ⊢ fun g → fun a → f a (g a) : (α → β) → α → β 
+–––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––– FUN 
+⊢ fun f → fun g → fun a → f a (g a) : (α → β → γ) → (α → β) → α → γ
+
+-/
+
+
 
 
 
@@ -143,12 +164,15 @@ Hint: you might find `List.append` useful in your implementation! You can also
 use the notation `xs ++ ys` for `List.append xs ys`. -/
 
 -- write your solution here
+def reverse {α : Type} : List α → List α 
+  | List.nil => List.nil
+  | (h :: t) => reverse t ++ [h]
 
 -- Once you've written your solution, uncomment these test cases and check that
 -- they give the expected outputs
--- #eval reverse [1, 2, 3, 4, 5] -- expected: [5, 4, 3, 2, 1]
--- #eval reverse ([] : List ℕ)  -- expected: []
--- #eval @reverse ℕ []          -- expected: []
+#eval reverse [1, 2, 3, 4, 5] -- expected: [5, 4, 3, 2, 1]
+#eval reverse ([] : List ℕ)  -- expected: []
+#eval @reverse ℕ []          -- expected: []
 
 
 
@@ -194,12 +218,12 @@ def f (x : ℕ) (y : ℕ := 1) (w : ℕ := 2) (z : ℕ) :=
 evaluates to `2`.
 -/
 
-#eval f (z := 3) 1
+#eval f (z := 2) 1
 
 /-! 3.3 (1 point). Specify a value for `w` below so that the expression
 evaluates to `5`. -/
 
-#eval f (y := 3) (x := 1) (z := 1)
+#eval f (y := 3) (x := 1) (z := 1) (w := 2)
 
 
 
@@ -215,7 +239,8 @@ For instance, `singletons [1, 2, 3, 4]` should evaluate to
 `[[1], [2], [3], [4]]`. -/
 
 def singletons {α : Type} : List α → List (List α)
-  := sorry
+  | []       => []
+  | (h :: t) => [[h]] ++ singletons t
 
 /- 4.2 (2 points). Define the function `flatten` that takes a list of lists and
 "flattens" it into a single list.
@@ -226,13 +251,17 @@ You should not call any form of append function (`++`, `List.append`, etc.) in
 your solution. -/
 
 def flatten {α : Type} : List (List α) → List α
-  := sorry
+  | []              => []
+  | [] :: t         => flatten t
+  | (h :: t1) :: t2 =>  h :: (flatten (t1 :: t2))
 
 /-! 4.3 (1 point). State a theorem that says that applying `singletons` and then
 `flatten` to any list gives the same list you started with. -/
 
 -- Replace `True` with your lemma statement. No need to fill in the `sorry`!
-theorem flatten_singletons : True := sorry
+theorem flatten_singletons (lst : List α): 
+  flatten (singletons lst) = lst
+:= sorry
 
 
 
@@ -244,5 +273,13 @@ explain why; if not, provide an example of a list for which the claim does not
 hold. -/
 
 -- Write your response to part 4 here.
+
+/- 
+No, this is not true. Consider the example under 4.2 where a list of lists
+defined as [[1], [2, 3], [], [4]]. Upon flattening, we get [1, 2, 3, 4], but
+if we do apply singletons we will not get both the [2,3] element nor the empty
+elemnt. Instead, we will just get [[1],[2],[3],[4]].
+
+-/
 
 end LoVe
